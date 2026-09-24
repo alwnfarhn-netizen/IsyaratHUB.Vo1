@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation';
+import LoginPage from './login/page';
 
 export default function Home() {
-  // Langsung arahkan (redirect) pengguna ke halaman login IsyaratHUB yang sudah Anda buat
-  redirect('/login');
+  return <LoginPage />;
 }
