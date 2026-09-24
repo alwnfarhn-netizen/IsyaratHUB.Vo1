@@ -1,0 +1,80 @@
+<svg width="1200" height="430" viewBox="0 0 1200 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="215" x2="1200" y2="215" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B3FD5"/>
+      <stop offset="1" stop-color="#6A42E8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="430" fill="url(#bg)"/>
+
+  <!-- Icon Container -->
+  <rect x="90" y="105" width="150" height="150" rx="42" fill="white"/>
+
+  <!-- Hand Icon -->
+  <g transform="translate(118 132)">
+    <path d="M47 78
+             C47 70 47 58 47 47
+             C47 41 51 37 56 37
+             C61 37 65 41 65 47
+             V66"
+          stroke="#6A42E8"
+          stroke-width="8"
+          stroke-linecap="round"
+          fill="none"/>
+
+    <path d="M65 66V32
+             C65 26 69 22 74 22
+             C79 22 83 26 83 32V66"
+          stroke="#6A42E8"
+          stroke-width="8"
+          stroke-linecap="round"
+          fill="none"/>
+
+    <path d="M83 66V38
+             C83 32 87 28 92 28
+             C97 28 101 32 101 38V66"
+          stroke="#6A42E8"
+          stroke-width="8"
+          stroke-linecap="round"
+          fill="none"/>
+
+    <path d="M101 66V48
+             C101 42 105 38 110 38
+             C115 38 119 42 119 48V72"
+          stroke="#6A42E8"
+          stroke-width="8"
+          stroke-linecap="round"
+          fill="none"/>
+
+    <path d="M47 78
+             C47 95 57 109 73 116
+             C86 122 104 120 118 110
+             C128 103 135 91 135 77"
+          stroke="#6A42E8"
+          stroke-width="8"
+          stroke-linecap="round"
+          fill="none"/>
+
+    <path d="M38 67
+             C31 59 24 58 18 63
+             C13 68 13 76 18 81
+             L31 94"
+          stroke="#6A42E8"
+          stroke-width="8"
+          stroke-linecap="round"
+          fill="none"/>
+  </g>
+
+  <!-- Text -->
+  <text
+    x="285"
+    y="235"
+    font-family="Poppins, Montserrat, Arial, sans-serif"
+    font-size="92"
+    font-weight="800"
+    fill="white">
+    IsyaratHUB
+  </text>
+</svg>
