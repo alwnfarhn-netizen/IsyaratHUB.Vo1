@@ -3,17 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Mail, Lock, UserCircle2, HandMetal, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Mail, Lock, UserCircle2, HandMetal, CheckCircle2, Building2 } from "lucide-react";
 
 export default function LoginPage() {
-  const [role, setRole] = useState<"deaf_user" | "jbi">("deaf_user");
+  const [role, setRole] = useState<"deaf_user" | "umum" | "jbi">("deaf_user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate navigation for preview purposes
-    if (role === "deaf_user") {
+    if (role === "deaf_user" || role === "umum") {
       window.location.href = "/dashboard/user";
     } else {
       window.location.href = "/dashboard/jbi";
@@ -92,25 +92,36 @@ export default function LoginPage() {
           <div className="flex p-1 mb-8 bg-slate-100 dark:bg-slate-800 rounded-2xl">
             <button
               onClick={() => setRole("deaf_user")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
                 role === "deaf_user" 
                   ? "bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 shadow-sm" 
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
               }`}
             >
-              <UserCircle2 className="w-4 h-4" />
+              <UserCircle2 className="w-5 h-5 mb-0.5" />
               Teman Tuli
             </button>
             <button
+              onClick={() => setRole("umum")}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
+                role === "umum" 
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm" 
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+              }`}
+            >
+              <Building2 className="w-5 h-5 mb-0.5" />
+              Umum/Instansi
+            </button>
+            <button
               onClick={() => setRole("jbi")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
                 role === "jbi" 
                   ? "bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm" 
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
               }`}
             >
-              <HandMetal className="w-4 h-4" />
-              JBI Profesional
+              <HandMetal className="w-5 h-5 mb-0.5" />
+              Mitra JBI
             </button>
           </div>
 
