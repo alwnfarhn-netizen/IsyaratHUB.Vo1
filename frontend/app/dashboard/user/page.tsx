@@ -280,9 +280,15 @@ export default function DeafUserDashboard() {
                     <h3 className="text-3xl font-bold text-slate-800 mb-2">Selesai!</h3>
                     <p className="text-slate-500 mb-10 text-lg">JBI {selectedJbi.name} segera melayani Anda.</p>
                     
-                    <button onClick={() => router.push('/call')} className="w-full py-4 rounded-2xl text-white font-bold text-lg bg-purple-600 hover:bg-purple-700 shadow-xl shadow-purple-200 transition-all">
-                      Mulai Video Call
-                    </button>
+                    {serviceMode === 'online' ? (
+                      <button onClick={() => router.push('/call')} className="w-full py-4 rounded-2xl text-white font-bold text-lg bg-purple-600 hover:bg-purple-700 shadow-xl shadow-purple-200 transition-all">
+                        Mulai Video Call
+                      </button>
+                    ) : (
+                      <div className="w-full py-4 rounded-2xl text-purple-700 font-bold text-lg bg-purple-50 transition-all">
+                        Menyiapkan Pelacakan Lokasi...
+                      </div>
+                    )}
                   </div>
                 ) : bookingStatus === "payment" ? (
                   <div className="py-10 text-center">
