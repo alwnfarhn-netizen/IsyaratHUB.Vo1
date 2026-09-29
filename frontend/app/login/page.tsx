@@ -3,20 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Mail, Lock, UserCircle2, HandMetal, CheckCircle2, Building2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Mail, Lock, HandMetal, CheckCircle2 } from "lucide-react";
 
 export default function LoginPage() {
-  const [role, setRole] = useState<"deaf_user" | "umum" | "jbi">("deaf_user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate navigation for preview purposes
-    if (role === "deaf_user" || role === "umum") {
-      window.location.href = "/dashboard/user";
-    } else {
+    // Simulasi login sementara tanpa backend
+    // Jika email mengandung kata 'jbi' atau 'mitra', arahkan ke dashboard JBI
+    if (email.toLowerCase().includes("jbi") || email.toLowerCase().includes("mitra")) {
       window.location.href = "/dashboard/jbi";
+    } else {
+      window.location.href = "/dashboard/user";
     }
   };
 
@@ -65,100 +65,65 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side: Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-24 bg-background">
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="w-full max-w-md relative"
-        >
-          {/* Mobile Back Button */}
-          <div className="lg:hidden absolute -top-12 left-0">
-            <Link href="/" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-medium transition-colors">
-              <ArrowLeft className="w-4 h-4" /> Kembali
-            </Link>
-          </div>
-          <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-              <HandMetal className="w-5 h-5 text-white" />
+      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 sm:px-12 xl:px-24 bg-background relative">
+        {/* Mobile Header with Back Button */}
+        <div className="lg:hidden absolute top-6 left-6 right-6 flex items-center justify-between">
+          <Link href="/" className="p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+            <ArrowLeft className="w-6 h-6" />
+          </Link>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+              <HandMetal className="w-4 h-4 text-white" />
             </div>
-            <span className="text-2xl font-bold text-foreground">IsyaratHUB</span>
+            <span className="text-xl font-bold text-foreground">IsyaratHUB</span>
+          </div>
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="w-full max-w-md mx-auto mt-12 lg:mt-0"
+        >
+          <div className="mb-10 text-center lg:text-left">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Selamat Datang</h2>
+            <p className="text-base text-slate-500 dark:text-slate-400">Masuk ke akun Anda untuk melanjutkan.</p>
           </div>
 
-          <h2 className="text-3xl font-bold mb-2">Selamat Datang</h2>
-          <p className="text-slate-500 dark:text-slate-400 mb-8">Masuk ke akun Anda untuk melanjutkan.</p>
-
-          {/* Role Toggle */}
-          <div className="flex p-1 mb-8 bg-slate-100 dark:bg-slate-800 rounded-2xl">
-            <button
-              onClick={() => setRole("deaf_user")}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                role === "deaf_user" 
-                  ? "bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 shadow-sm" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
-            >
-              <UserCircle2 className="w-5 h-5 mb-0.5" />
-              Teman Tuli
-            </button>
-            <button
-              onClick={() => setRole("umum")}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                role === "umum" 
-                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
-            >
-              <Building2 className="w-5 h-5 mb-0.5" />
-              Umum/Instansi
-            </button>
-            <button
-              onClick={() => setRole("jbi")}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                role === "jbi" 
-                  ? "bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
-            >
-              <HandMetal className="w-5 h-5 mb-0.5" />
-              Mitra JBI
-            </button>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Email</label>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1 block">Email</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
+                  <Mail className="h-6 w-6 text-slate-400" />
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all dark:text-white"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all text-base dark:text-white shadow-sm"
                   placeholder="nama@email.com"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <div className="flex items-center justify-between ml-1">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 block">Password</label>
                 <Link href="#" className="text-sm font-medium text-purple-600 hover:text-purple-500">
                   Lupa password?
                 </Link>
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
+                  <Lock className="h-6 w-6 text-slate-400" />
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all dark:text-white"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all text-base dark:text-white shadow-sm"
                   placeholder="••••••••"
                   required
                 />
@@ -167,20 +132,16 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className={`w-full py-3.5 rounded-2xl text-white font-semibold flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:-translate-y-0.5 ${
-                role === 'deaf_user' 
-                  ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-600/30' 
-                  : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30'
-              }`}
+              className="w-full py-4 mt-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-lg flex items-center justify-center gap-2 transition-all hover:shadow-xl hover:shadow-purple-600/20 active:scale-[0.98]"
             >
               Masuk
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-6 h-6" />
             </button>
           </form>
 
-          <div className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
+          <div className="mt-10 text-center text-base text-slate-500 dark:text-slate-400">
             Belum punya akun?{" "}
-            <Link href="/register" className={`font-semibold ${role === 'deaf_user' ? 'text-purple-600' : 'text-emerald-600'} hover:underline`}>
+            <Link href="/register" className="font-bold text-purple-600 hover:text-purple-700 hover:underline transition-colors">
               Daftar sekarang
             </Link>
           </div>

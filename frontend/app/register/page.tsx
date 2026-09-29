@@ -3,20 +3,27 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Mail, Lock, UserCircle2, HandMetal, User, UploadCloud, FileText, X, AlertTriangle, Building2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Mail, Lock, UserCircle2, HandMetal, User, UploadCloud, FileText, Building2 } from "lucide-react";
+
+type RoleType = "deaf_user" | "umum" | "jbi";
 
 export default function RegisterPage() {
-  const [role, setRole] = useState<"deaf_user" | "umum" | "jbi">("deaf_user");
+  const [step, setStep] = useState<1 | 2>(1);
+  const [role, setRole] = useState<RoleType>("deaf_user"); // Default, only used in step 2
+  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [certificate, setCertificate] = useState<File | null>(null);
-  const [showTos, setShowTos] = useState(false);
   const [acceptedTos, setAcceptedTos] = useState(false);
+
+  const handleSelectRole = (selectedRole: RoleType) => {
+    setRole(selectedRole);
+    setStep(2);
+  };
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate navigation for preview purposes
     if (role === "jbi") {
       window.location.href = "/dashboard/jbi";
     } else {
@@ -24,13 +31,24 @@ export default function RegisterPage() {
     }
   };
 
+  const getThemeColor = () => {
+    if (role === 'deaf_user') return 'purple';
+    if (role === 'umum') return 'blue';
+    return 'emerald';
+  };
+  
+  const theme = getThemeColor();
+  const themeClasses = {
+    purple: "bg-purple-600 hover:bg-purple-700 text-purple-600 focus:ring-purple-500",
+    blue: "bg-blue-600 hover:bg-blue-700 text-blue-600 focus:ring-blue-500",
+    emerald: "bg-emerald-600 hover:bg-emerald-700 text-emerald-600 focus:ring-emerald-500",
+  };
+
   return (
     <div className="min-h-screen flex bg-background flex-row-reverse">
-      {/* Right Side: Branding / Visual (Hidden on mobile) - Reversed for Register */}
+      {/* Right Side: Branding / Visual (Hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-bl from-emerald-500 via-teal-600 to-indigo-700">
         <div className="absolute inset-0 bg-black/20" />
-        
-        {/* Abstract decorative circles */}
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-teal-500/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
@@ -65,328 +83,219 @@ export default function RegisterPage() {
       </div>
 
       {/* Left Side: Register Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-24 bg-background">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="w-full max-w-md relative"
-        >
-          {/* Mobile Back Button */}
-          <div className="lg:hidden absolute -top-12 left-0">
-            <Link href="/" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-medium transition-colors">
-              <ArrowLeft className="w-4 h-4" /> Kembali
-            </Link>
+      <div className="w-full lg:w-1/2 flex flex-col px-6 py-12 sm:px-12 xl:px-24 bg-background relative overflow-y-auto">
+        {/* Mobile Header with Back Button */}
+        <div className="lg:hidden absolute top-6 left-6 right-6 flex items-center justify-between z-10">
+          <button 
+            onClick={() => step === 2 ? setStep(1) : window.location.href = "/"}
+            className="p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
+              <UserCircle2 className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-xl font-bold text-foreground">IsyaratHUB</span>
           </div>
-          <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <UserCircle2 className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-foreground">IsyaratHUB</span>
-          </div>
+        </div>
 
-          <h2 className="text-3xl font-bold mb-2">Buat Akun</h2>
-          <p className="text-slate-500 dark:text-slate-400 mb-6">Daftar secara gratis untuk mulai menggunakan IsyaratHUB.</p>
-
-          {/* Role Toggle */}
-          <div className="flex p-1 mb-6 bg-slate-100 dark:bg-slate-800 rounded-2xl">
-            <button
-              onClick={() => setRole("deaf_user")}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                role === "deaf_user" 
-                  ? "bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 shadow-sm" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
-            >
-              <UserCircle2 className="w-5 h-5 mb-0.5" />
-              Teman Tuli
-            </button>
-            <button
-              onClick={() => setRole("umum")}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                role === "umum" 
-                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
-            >
-              <Building2 className="w-5 h-5 mb-0.5" />
-              Umum/Instansi
-            </button>
-            <button
-              onClick={() => setRole("jbi")}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                role === "jbi" 
-                  ? "bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-              }`}
-            >
-              <HandMetal className="w-5 h-5 mb-0.5" />
-              Mitra JBI
-            </button>
-          </div>
-
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Nama Lengkap</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all dark:text-white"
-                  placeholder="Nama Lengkap Anda"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Email</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all dark:text-white"
-                  placeholder="nama@email.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Password</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all dark:text-white"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-            </div>
-
-            {role === "jbi" && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} 
-                animate={{ opacity: 1, height: "auto" }} 
-                className="space-y-1 overflow-hidden"
+        <div className="flex-1 flex flex-col justify-center max-w-md w-full mx-auto mt-12 lg:mt-0">
+          <AnimatePresence mode="wait">
+            {step === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4 }}
+                className="w-full"
               >
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Sertifikat JBI (Wajib)</label>
-                <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-4 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
-                  <input
-                    type="file"
-                    accept=".pdf,image/*"
-                    onChange={(e) => setCertificate(e.target.files?.[0] || null)}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    required
-                  />
-                  {certificate ? (
-                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                      <FileText className="w-6 h-6" />
-                      <span className="text-sm font-medium truncate max-w-[200px]">{certificate.name}</span>
+                <div className="mb-10 text-center lg:text-left">
+                  <h2 className="text-3xl sm:text-4xl font-bold mb-3">Pilih Peran Anda</h2>
+                  <p className="text-base text-slate-500 dark:text-slate-400">Bagaimana Anda akan menggunakan IsyaratHUB?</p>
+                </div>
+
+                <div className="space-y-4">
+                  <button
+                    onClick={() => handleSelectRole("deaf_user")}
+                    className="w-full p-6 bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl flex items-center gap-5 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all text-left active:scale-[0.98]"
+                  >
+                    <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/50 rounded-2xl flex items-center justify-center shrink-0">
+                      <UserCircle2 className="w-7 h-7 text-purple-600 dark:text-purple-400" />
                     </div>
-                  ) : (
-                    <div className="flex flex-col items-center text-slate-500">
-                      <UploadCloud className="w-8 h-8 mb-2 text-slate-400" />
-                      <span className="text-sm font-medium">Klik atau seret file ke sini</span>
-                      <span className="text-xs text-slate-400 mt-1">PDF, JPG, atau PNG (Max 5MB)</span>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Teman Tuli</h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Saya butuh bantuan Juru Bahasa Isyarat.</p>
                     </div>
-                  )}
+                  </button>
+
+                  <button
+                    onClick={() => handleSelectRole("umum")}
+                    className="w-full p-6 bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl flex items-center gap-5 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all text-left active:scale-[0.98]"
+                  >
+                    <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-2xl flex items-center justify-center shrink-0">
+                      <Building2 className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Umum / Instansi</h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Saya butuh JBI untuk acara/kegiatan.</p>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelectRole("jbi")}
+                    className="w-full p-6 bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl flex items-center gap-5 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all text-left active:scale-[0.98]"
+                  >
+                    <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/50 rounded-2xl flex items-center justify-center shrink-0">
+                      <HandMetal className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Mitra JBI</h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Saya ingin menjadi Juru Bahasa Isyarat.</p>
+                    </div>
+                  </button>
+                </div>
+
+                <div className="mt-10 text-center text-base text-slate-500 dark:text-slate-400">
+                  Sudah punya akun?{" "}
+                  <Link href="/login" className="font-bold text-teal-600 hover:text-teal-700 hover:underline transition-colors">
+                    Masuk di sini
+                  </Link>
                 </div>
               </motion.div>
             )}
 
-            <div className="flex items-start gap-3 mt-4 mb-2">
-              <input 
-                type="checkbox" 
-                id="tos" 
-                checked={acceptedTos}
-                onChange={(e) => setAcceptedTos(e.target.checked)}
-                required 
-                className={`mt-1 w-4 h-4 rounded border-slate-300 shrink-0 cursor-pointer focus:ring-2 ${role === 'deaf_user' ? 'text-purple-600 focus:ring-purple-600' : 'text-emerald-600 focus:ring-emerald-600'}`} 
-              />
-              <label htmlFor="tos" className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed cursor-pointer">
-                Dengan mendaftar, Anda menyetujui <button type="button" onClick={() => setShowTos(true)} className={`font-semibold hover:underline ${role === 'deaf_user' ? 'text-purple-600' : 'text-emerald-600'}`}>Syarat & Ketentuan (Terms of Service)</button> dan Kebijakan Privasi platform IsyaratHUB.
-              </label>
-            </div>
+            {step === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.4 }}
+                className="w-full"
+              >
+                <div className="mb-10 text-center lg:text-left">
+                  <h2 className="text-3xl sm:text-4xl font-bold mb-3">Lengkapi Data</h2>
+                  <p className="text-base text-slate-500 dark:text-slate-400">
+                    Mendaftar sebagai <span className={`font-bold text-${theme}-600`}>{role === 'deaf_user' ? 'Teman Tuli' : role === 'umum' ? 'Umum/Instansi' : 'Mitra JBI'}</span>.
+                  </p>
+                </div>
 
-            <button
-              type="submit"
-              className={`w-full py-3.5 mt-2 rounded-2xl text-white font-semibold flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:-translate-y-0.5 ${
-                role === 'deaf_user' 
-                  ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-600/30' 
-                  : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30'
-              }`}
-            >
-              Daftar Sekarang
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </form>
+                <form onSubmit={handleRegister} className="space-y-5">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1 block">Nama Lengkap</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <User className="h-6 w-6 text-slate-400" />
+                      </div>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className={`w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-${theme}-500/20 focus:border-${theme}-500 outline-none transition-all text-base dark:text-white shadow-sm`}
+                        placeholder="Nama Lengkap"
+                        required
+                      />
+                    </div>
+                  </div>
 
-          <div className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
-            Sudah punya akun?{" "}
-            <Link href="/login" className={`font-semibold ${role === 'deaf_user' ? 'text-purple-600' : 'text-emerald-600'} hover:underline`}>
-              Masuk di sini
-            </Link>
-          </div>
-        </motion.div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1 block">Email</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Mail className="h-6 w-6 text-slate-400" />
+                      </div>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={`w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-${theme}-500/20 focus:border-${theme}-500 outline-none transition-all text-base dark:text-white shadow-sm`}
+                        placeholder="nama@email.com"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1 block">Password</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Lock className="h-6 w-6 text-slate-400" />
+                      </div>
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={`w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-${theme}-500/20 focus:border-${theme}-500 outline-none transition-all text-base dark:text-white shadow-sm`}
+                        placeholder="••••••••"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {role === "jbi" && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }} 
+                      animate={{ opacity: 1, height: "auto" }} 
+                      className="space-y-2 pt-2"
+                    >
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1 block">Unggah Sertifikat JBI</label>
+                      <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors active:scale-[0.98]">
+                        <input
+                          type="file"
+                          accept=".pdf,image/*"
+                          onChange={(e) => setCertificate(e.target.files?.[0] || null)}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          required
+                        />
+                        {certificate ? (
+                          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                            <FileText className="w-8 h-8" />
+                            <span className="text-base font-medium truncate max-w-[200px]">{certificate.name}</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center text-slate-500">
+                            <UploadCloud className="w-10 h-10 mb-3 text-slate-400" />
+                            <span className="text-base font-medium">Ketuk untuk unggah</span>
+                            <span className="text-sm text-slate-400 mt-1">PDF, JPG (Max 5MB)</span>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <div className="flex items-start gap-3 mt-6 mb-2">
+                    <input 
+                      type="checkbox" 
+                      id="tos" 
+                      checked={acceptedTos}
+                      onChange={(e) => setAcceptedTos(e.target.checked)}
+                      required 
+                      className={`mt-1.5 w-5 h-5 rounded border-slate-300 shrink-0 cursor-pointer focus:ring-2 text-${theme}-600 focus:ring-${theme}-600`} 
+                    />
+                    <label htmlFor="tos" className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed cursor-pointer select-none">
+                      Saya menyetujui <Link href="/terms" target="_blank" className={`font-bold hover:underline text-${theme}-600`}>Syarat & Ketentuan</Link> dan <Link href="/privacy" target="_blank" className={`font-bold hover:underline text-${theme}-600`}>Kebijakan Privasi</Link>.
+                    </label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={`w-full py-4 mt-6 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2 transition-all hover:shadow-xl active:scale-[0.98] ${
+                      role === 'deaf_user' ? 'bg-purple-600 hover:bg-purple-700 hover:shadow-purple-600/20' : 
+                      role === 'umum' ? 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-600/20' : 
+                      'bg-emerald-600 hover:bg-emerald-700 hover:shadow-emerald-600/20'
+                    }`}
+                  >
+                    Daftar Sekarang
+                    <ArrowRight className="w-6 h-6" />
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-      
-      {/* ToS Modal */}
-      <AnimatePresence>
-        {showTos && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl"
-            >
-              <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
-                <h3 className="text-xl font-bold">Syarat & Ketentuan (Terms of Service)</h3>
-                <button onClick={() => setShowTos(false)} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="p-6 overflow-y-auto flex-1 space-y-6 text-sm text-slate-600 dark:text-slate-300">
-                {role === "jbi" ? (
-                  <>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">1. Komisi & Pembayaran (Bagi Hasil)</h4>
-                      <p>
-                        Sebagai platform wirausaha sosial, IsyaratHUB menerapkan sistem bagi hasil. Dari total tarif per jam, <strong>90%</strong> akan menjadi hak JBI dan <strong>10%</strong> untuk biaya operasional platform.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-red-600 flex items-center gap-2 text-base mb-2">
-                        <AlertTriangle className="w-5 h-5" /> 2. Larangan Transaksi di Luar (Back-Channeling)
-                      </h4>
-                      <p className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-4 rounded-xl border border-red-100 dark:border-red-900/50 leading-relaxed">
-                        Anda <strong>DILARANG KERAS</strong> meminta klien membatalkan pesanan di aplikasi dengan tujuan untuk bertransaksi langsung di luar sistem IsyaratHUB. Pelanggaran akan berakibat pemblokiran akun permanen.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">3. Kerahasiaan Klien (Confidentiality)</h4>
-                      <p>
-                        JBI diwajibkan menjaga kerahasiaan informasi medis, hukum, atau data sensitif apapun yang didengar selama sesi pendampingan. Dilarang keras mempublikasikannya ke pihak lain atau media sosial.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-red-600 flex items-center gap-2 text-base mb-2">
-                        <AlertTriangle className="w-5 h-5" /> 4. Kebijakan Suspensi JBI
-                      </h4>
-                      <ul className="list-disc pl-5 space-y-2">
-                        <li><strong>No-Show:</strong> Menerima pesanan namun tidak hadir di lokasi tanpa alasan <em>Force Majeure</em>.</li>
-                        <li><strong>Pemalsuan Identitas:</strong> Menggunakan sertifikat atau profil palsu saat mendaftar.</li>
-                        <li><strong>Kinerja Buruk:</strong> Mendapatkan rating 1-2 bintang lebih dari 5 kali berturut-turut.</li>
-                        <li><strong>Pelecehan:</strong> Melakukan tindakan tidak profesional atau pelecehan kepada klien.</li>
-                      </ul>
-                    </section>
-                  </>
-                ) : role === "umum" ? (
-                  <>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">1. Ketentuan Pemesanan & Pembayaran</h4>
-                      <p>
-                        Pengguna Umum / Instansi wajib melakukan pembayaran di muka sesuai estimasi durasi via Payment Gateway. Jika sesi melebihi batas waktu (<em>overtime</em>), tagihan tambahan akan dikirimkan setelah sesi selesai.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">2. Lingkup Kerja JBI</h4>
-                      <p>
-                        JBI <strong>hanya bertugas sebagai penerjemah bahasa isyarat</strong>. Instansi/Panitia dilarang mengeksploitasi atau meminta JBI melakukan tugas-tugas administratif maupun pekerjaan fisik di luar deskripsi kerjanya.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">3. Kebijakan Pembatalan</h4>
-                      <p>
-                        Pembatalan yang dilakukan setelah JBI menyetujui pesanan dan sedang dalam perjalanan ke lokasi, akan dikenakan biaya kompensasi pembatalan.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-red-600 flex items-center gap-2 text-base mb-2">
-                        <AlertTriangle className="w-5 h-5" /> 4. Kebijakan Suspensi Akun Instansi
-                      </h4>
-                      <ul className="list-disc pl-5 space-y-2">
-                        <li><strong>Gagal Bayar:</strong> Melakukan penipuan pembayaran, <em>chargeback</em> ilegal, atau menolak membayar biaya tambahan waktu (overtime).</li>
-                        <li><strong>Order Fiktif:</strong> Membuat pesanan palsu (prank) yang merugikan JBI.</li>
-                        <li><strong>Eksploitasi / Pelecehan:</strong> Melakukan eksploitasi, ancaman, atau pelecehan fisik/verbal terhadap JBI kami di lapangan.</li>
-                      </ul>
-                    </section>
-                  </>
-                ) : (
-                  <>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">1. Layanan Aksesibilitas</h4>
-                      <p>
-                        IsyaratHUB dirancang untuk memudahkan Teman Tuli mendapatkan akses penerjemah JBI secara cepat. Platform kami menjamin keamanan dan kenyamanan Anda selama menggunakan jasa JBI.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">2. Etika & Perlindungan Bersama</h4>
-                      <p>
-                        Kami memprioritaskan keamanan Anda dan Mitra JBI kami. Harap selalu berkomunikasi dengan sopan. Jika Anda mengalami kendala atau pelecehan dari pihak JBI, segera laporkan melalui tombol "Bantuan & Laporan".
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-base mb-2">3. Kebijakan Pembatalan & Refund</h4>
-                      <p>
-                        Jika Anda membatalkan pesanan saat JBI sudah tiba di lokasi, dana yang telah dibayarkan mungkin tidak dapat dikembalikan secara penuh. Namun, jika JBI yang gagal hadir (no-show), dana Anda akan dikembalikan 100%.
-                      </p>
-                    </section>
-                    <section>
-                      <h4 className="font-bold text-red-600 flex items-center gap-2 text-base mb-2">
-                        <AlertTriangle className="w-5 h-5" /> 4. Kebijakan Penangguhan Akun
-                      </h4>
-                      <ul className="list-disc pl-5 space-y-2">
-                        <li><strong>Order Fiktif:</strong> Sengaja melakukan pesanan palsu yang membuang waktu dan biaya transport JBI.</li>
-                        <li><strong>Tingkat Pembatalan Tinggi:</strong> Sering membatalkan pesanan secara sepihak untuk menghindari pembayaran via sistem (indikasi kolusi).</li>
-                        <li><strong>Kekerasan:</strong> Melakukan ancaman atau pelecehan fisik/verbal kepada JBI.</li>
-                      </ul>
-                    </section>
-                  </>
-                )}
-              </div>
-              <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-end gap-3">
-                <button 
-                  type="button"
-                  onClick={() => setShowTos(false)}
-                  className="px-6 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
-                >
-                  Tutup
-                </button>
-                <button 
-                  type="button"
-                  onClick={() => {
-                    setAcceptedTos(true);
-                    setShowTos(false);
-                  }}
-                  className={`px-6 py-2.5 rounded-xl text-white font-medium shadow-lg transition-colors ${role === 'deaf_user' ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-600/30' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30'}`}
-                >
-                  Saya Setuju
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
