@@ -1,15 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Mic, MicOff, Video, VideoOff, PhoneOff, MessageSquare, MoreVertical, Maximize } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Mic, MicOff, Video, VideoOff, PhoneOff, MessageSquare, MoreVertical, Maximize, X, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function VideoCallPage() {
   const router = useRouter();
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [message, setMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, sender: "Budi Santoso (JBI)", text: "Halo! Ada yang bisa saya bantu terjemahkan hari ini?", time: "10:00" },
+    { id: 2, sender: "Anda", text: "Iya, saya mau ke bank untuk membuka rekening.", time: "10:01" },
+  ]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages, isChatOpen]);
 
   useEffect(() => {
     const timer = setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -24,6 +35,20 @@ export default function VideoCallPage() {
 
   const handleEndCall = () => {
     router.back();
+  };
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    
+    const now = new Date();
+    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    setChatMessages([
+      ...chatMessages,
+      { id: Date.now(), sender: "Anda", text: message, time }
+    ]);
+    setMessage("");
   };
 
   return (
@@ -96,15 +121,78 @@ export default function VideoCallPage() {
           <PhoneOff className="w-8 h-8 sm:w-10 sm:h-10" />
         </button>
 
-        <button className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 flex items-center justify-center transition-all relative">
+        <button 
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center transition-all relative ${isChatOpen ? 'bg-indigo-600 text-white' : 'bg-white/20 backdrop-blur-md text-white hover:bg-white/30'}`}
+        >
           <MessageSquare className="w-6 h-6 sm:w-7 sm:h-7" />
-          <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-slate-900" />
+          {!isChatOpen && <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-slate-900" />}
         </button>
 
         <button className="hidden sm:flex w-16 h-16 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 items-center justify-center transition-all">
           <MoreVertical className="w-7 h-7" />
         </button>
       </div>
+
+      {/* Chat Sidebar */}
+      <AnimatePresence>
+        {isChatOpen && (
+          <motion.div
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="absolute top-0 right-0 h-full w-full sm:w-96 bg-white/10 backdrop-blur-xl border-l border-white/20 z-40 flex flex-col shadow-2xl"
+          >
+            <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/20">
+              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-indigo-400" />
+                Obrolan
+              </h3>
+              <button 
+                onClick={() => setIsChatOpen(false)}
+                className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+              {chatMessages.map((msg) => {
+                const isMe = msg.sender === "Anda";
+                return (
+                  <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                    <span className="text-xs text-white/50 mb-1 ml-1">{msg.sender} • {msg.time}</span>
+                    <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm ${isMe ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white/20 text-white rounded-tl-sm backdrop-blur-md'}`}>
+                      {msg.text}
+                    </div>
+                  </div>
+                );
+              })}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-4 bg-black/20 border-t border-white/10">
+              <form onSubmit={handleSendMessage} className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Ketik pesan..." 
+                  className="flex-1 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                />
+                <button 
+                  type="submit"
+                  disabled={!message.trim()}
+                  className="p-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-full text-white transition-colors flex items-center justify-center shrink-0"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

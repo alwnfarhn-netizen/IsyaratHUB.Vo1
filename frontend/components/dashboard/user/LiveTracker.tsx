@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, CheckCircle2, Clock, Navigation, User, Phone, Star } from "lucide-react";
+import { MapPin, CheckCircle2, Clock, Navigation, User, Phone, Star, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 const STEPS = [
   { id: "searching",          label: "Mencari JBI...",              sub: "Sistem mencocokkan JBI terdekat.",          icon: <Clock className="w-6 h-6" /> },
@@ -90,9 +91,14 @@ export default function LiveTracker({ jbiName, jbiAvatar, location, onClose }: {
             </motion.div>
           </AnimatePresence>
 
-          <button onClick={onClose} className="w-full py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl transition-all text-lg">
-            Tutup
-          </button>
+          <div className="flex gap-3">
+            <Link href="/chat" className="flex-1 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl transition-all text-lg flex items-center justify-center gap-2 shadow-lg shadow-purple-200">
+              <MessageSquare className="w-5 h-5" /> Chat
+            </Link>
+            <button onClick={onClose} className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl transition-all text-lg">
+              Tutup
+            </button>
+          </div>
         </div>
       </motion.div>
     </div>
