@@ -64,7 +64,7 @@ export default function DeafUserDashboard() {
       </div>
 
       {/* HEADER DESKTOP (BERSIH & MINIMALIS) */}
-      <header className="hidden sm:flex absolute top-6 left-6 right-6 z-40 bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl px-6 py-4 items-center justify-between shadow-sm">
+      <header className="hidden sm:flex absolute top-6 left-6 right-6 z-40 bg-white border border-slate-200 rounded-3xl px-6 py-4 items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 relative flex items-center justify-center">
             <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain drop-shadow-sm" />
@@ -101,7 +101,7 @@ export default function DeafUserDashboard() {
       {activeTab === "Cari JBI" && (
         <>
           {/* SIDEBAR DESKTOP */}
-          <aside className="hidden sm:flex absolute top-32 left-6 bottom-6 w-[400px] bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-3xl shadow-2xl flex-col z-30 overflow-hidden">
+          <aside className="hidden sm:flex absolute top-32 left-6 bottom-6 w-[400px] bg-white border border-slate-200 rounded-3xl shadow-2xl flex-col z-30 overflow-hidden">
             <div className="p-6 border-b border-slate-100">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Butuh Bantuan JBI?</h2>
               <p className="text-sm text-slate-500 mb-6">Pilih JBI terdekat untuk membantu Anda.</p>
@@ -164,7 +164,7 @@ export default function DeafUserDashboard() {
             initial={{ y: "100%" }}
             animate={{ y: isMobileSheetOpen ? 0 : "70%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="sm:hidden absolute bottom-20 left-0 w-full h-[65%] bg-white/95 backdrop-blur-3xl border-t border-slate-200 rounded-t-[2.5rem] flex flex-col z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
+            className="sm:hidden absolute bottom-20 left-0 w-full h-[65%] bg-white border-t border-slate-200 rounded-t-[2.5rem] flex flex-col z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
           >
             <div className="w-full flex justify-center pt-4 pb-2" onClick={() => setIsMobileSheetOpen(!isMobileSheetOpen)}>
               <div className="w-12 h-1.5 bg-slate-300 rounded-full cursor-pointer" />
@@ -239,7 +239,7 @@ export default function DeafUserDashboard() {
       )}
 
       {/* NAVIGASI BAWAH MOBILE */}
-      <nav className="sm:hidden absolute bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 z-50 flex justify-around items-center pb-safe pt-2 h-20 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+      <nav className="sm:hidden absolute bottom-0 left-0 w-full bg-white border-t border-slate-200 z-50 flex justify-around items-center pb-safe pt-2 h-20 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
         <MobileNavItem icon={<MapPin />} label="Peta" active={activeTab === "Cari JBI"} onClick={() => setActiveTab("Cari JBI")} />
         <MobileNavItem icon={<Clock />} label="Riwayat" active={activeTab === "Riwayat"} onClick={() => setActiveTab("Riwayat")} />
         <MobileNavItem icon={<Bell />} label="Notif" active={activeTab === "Notifikasi"} onClick={() => setActiveTab("Notifikasi")} />

@@ -35,7 +35,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans overflow-x-hidden relative">
 
       {/* ── NAVBAR ── */}
-      <nav className="fixed top-0 w-full z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+      <nav className="fixed top-0 w-full z-50 border-b border-slate-200 bg-white">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 relative flex items-center justify-center">
