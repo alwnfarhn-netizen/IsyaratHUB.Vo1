@@ -224,5 +224,6 @@ export default function StandaloneChatPage() {
         </form>
       </div>
     </div>
+    </div>
   );
 }

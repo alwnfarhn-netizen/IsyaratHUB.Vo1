@@ -38,8 +38,8 @@ export default function LandingPage() {
       <nav className="fixed top-0 w-full z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-purple-100 rounded-xl flex items-center justify-center border border-purple-200">
-              <HandMetal className="w-5 h-5 text-purple-600" />
+            <div className="w-10 h-10 relative flex items-center justify-center">
+              <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain drop-shadow-sm" />
             </div>
             <span className="font-bold text-lg tracking-tight text-slate-800">IsyaratHUB</span>
           </div>
@@ -229,8 +229,8 @@ export default function LandingPage() {
       <footer className="border-t border-slate-200 bg-white py-10 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-slate-500 font-medium">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center border border-purple-200">
-              <HandMetal className="w-4 h-4 text-purple-600" />
+            <div className="w-8 h-8 relative flex items-center justify-center">
+              <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain" />
             </div>
             <span className="font-bold text-slate-800">IsyaratHUB</span>
             <span className="hidden sm:inline">— Proyek Sosial PFmuda 2026</span>

@@ -66,8 +66,8 @@ export default function DeafUserDashboard() {
       {/* HEADER DESKTOP (BERSIH & MINIMALIS) */}
       <header className="hidden sm:flex absolute top-6 left-6 right-6 z-40 bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl px-6 py-4 items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-purple-100 rounded-2xl flex items-center justify-center">
-            <HandMetal className="w-6 h-6 text-purple-600" />
+          <div className="w-10 h-10 relative flex items-center justify-center">
+            <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain drop-shadow-sm" />
           </div>
           <span className="font-bold text-xl text-slate-800">IsyaratHUB</span>
         </div>
@@ -91,8 +91,8 @@ export default function DeafUserDashboard() {
       {/* HEADER MOBILE */}
       <header className="sm:hidden absolute top-0 left-0 w-full z-40 pt-6 pb-12 px-6 flex items-center justify-between pointer-events-none">
         <div className="flex items-center gap-3 pointer-events-auto">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-slate-100">
-            <HandMetal className="w-7 h-7 text-purple-600" />
+          <div className="w-12 h-12 relative flex items-center justify-center drop-shadow-lg bg-white rounded-2xl p-2 border border-slate-100">
+            <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain" />
           </div>
         </div>
       </header>
@@ -365,10 +365,14 @@ export default function DeafUserDashboard() {
 
                       <div>
                         <label className="text-base font-bold text-slate-800 block mb-3">Berapa Lama?</label>
-                        <div className="flex gap-3">
-                          {[1, 2, 3].map((jam) => (
-                            <button key={jam} type="button" onClick={() => setDuration(jam)} className={`flex-1 py-4 rounded-2xl border-2 font-bold transition-all ${duration === jam ? 'border-purple-600 bg-purple-50 text-purple-700' : 'border-slate-100 bg-white text-slate-500 hover:bg-slate-50'}`}>
-                              {jam} Jam
+                        <div className="flex gap-2 sm:gap-3">
+                          {[
+                            { val: 0.5, label: "30 Menit" },
+                            { val: 1, label: "1 Jam" },
+                            { val: 2, label: "2 Jam" }
+                          ].map((item) => (
+                            <button key={item.val} type="button" onClick={() => setDuration(item.val)} className={`flex-1 py-3 sm:py-4 rounded-2xl border-2 font-bold transition-all text-sm sm:text-base ${duration === item.val ? 'border-purple-600 bg-purple-50 text-purple-700' : 'border-slate-100 bg-white text-slate-500 hover:bg-slate-50'}`}>
+                              {item.label}
                             </button>
                           ))}
                         </div>

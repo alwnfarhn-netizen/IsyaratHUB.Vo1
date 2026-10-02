@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "IsyaratHUB Architecture",
+    "output": "isyarathub-architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "user_deaf", "type": "external", "label": "Teman Tuli", "sublabel": "Mobile/Web App", "pos": [40, 150], "size": [120, 60] },
+    { "id": "user_jbi", "type": "external", "label": "JBI", "sublabel": "Mobile/Web App", "pos": [40, 300], "size": [120, 60] },
+    { "id": "admin", "type": "external", "label": "Admin", "sublabel": "Web Dashboard", "pos": [40, 450], "size": [120, 60] },
+    
+    { "id": "frontend", "type": "frontend", "label": "Next.js 14", "sublabel": "Vercel / PWA", "pos": [260, 300], "size": [140, 60], "tag": "App Router" },
+    
+    { "id": "supa_auth", "type": "security", "label": "Supabase Auth", "sublabel": "User Auth", "pos": [520, 100], "size": [140, 60] },
+    { "id": "supa_db", "type": "database", "label": "PostgreSQL", "sublabel": "PostGIS", "pos": [520, 250], "size": [140, 60], "tag": "RPC Matchmaking" },
+    { "id": "supa_realtime", "type": "messagebus", "label": "Realtime", "sublabel": "Supabase", "pos": [520, 400], "size": [140, 60], "tag": "Live Tracker" },
+    { "id": "supa_storage", "type": "cloud", "label": "Supabase Storage", "sublabel": "Sertifikat", "pos": [520, 550], "size": [140, 60] },
+    { "id": "supa_edge", "type": "backend", "label": "Edge Functions", "sublabel": "Supabase", "pos": [780, 400], "size": [140, 60] },
+    
+    { "id": "payment", "type": "external", "label": "Midtrans/Xendit", "sublabel": "Payment Gateway", "pos": [780, 250], "size": [140, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Supabase (BaaS)", "wraps": ["supa_auth", "supa_db", "supa_realtime", "supa_storage", "supa_edge"] }
+  ],
+  "connections": [
+    { "id": "deaf-to-fe", "from": "user_deaf", "to": "frontend" },
+    { "id": "jbi-to-fe", "from": "user_jbi", "to": "frontend" },
+    { "id": "admin-to-fe", "from": "admin", "to": "frontend" },
+    
+    { "id": "fe-to-auth", "from": "frontend", "to": "supa_auth", "label": "Login/Register" },
+    { "id": "fe-to-db", "from": "frontend", "to": "supa_db", "label": "Data & RPC" },
+    { "id": "fe-to-realtime", "from": "frontend", "to": "supa_realtime", "label": "WebSocket" },
+    { "id": "fe-to-storage", "from": "frontend", "to": "supa_storage", "label": "Upload PDF/JPG", "variant": "dashed" },
+    
+    { "id": "db-to-realtime", "from": "supa_db", "to": "supa_realtime", "label": "CDC", "variant": "dashed" },
+    
+    { "id": "fe-to-payment", "from": "frontend", "to": "payment", "label": "Create Invoice", "fromSide": "top", "toSide": "top", "via": [[330, 210], [850, 210]] },
+    { "id": "payment-to-edge", "from": "payment", "to": "supa_edge", "label": "Webhook" },
+    { "id": "edge-to-db", "from": "supa_edge", "to": "supa_db", "label": "Update Status" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Frontend", "items": ["Next.js 14 App Router (React)", "Di-host di Vercel sebagai PWA", "Menggunakan Leaflet untuk peta"] },
+    { "dot": "emerald", "title": "Backend (Supabase)", "items": ["PostgreSQL + PostGIS untuk matchmaking JBI terdekat", "Supabase Realtime untuk Live Tracker pemesanan", "Supabase Auth untuk keamanan sesi"] },
+    { "dot": "rose", "title": "External", "items": ["Midtrans/Xendit untuk Payment Gateway", "Webhook ditangkap oleh Supabase Edge Functions"] }
+  ]
+}

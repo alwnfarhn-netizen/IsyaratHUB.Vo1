@@ -44,8 +44,8 @@ export default function LoginPage() {
             transition={{ duration: 0.8 }}
           >
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-xl">
-                <HandMetal className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 relative flex items-center justify-center drop-shadow-lg">
+                <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain" />
               </div>
               <span className="text-3xl font-bold text-white tracking-tight">IsyaratHUB</span>
             </div>
@@ -72,8 +72,8 @@ export default function LoginPage() {
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-              <HandMetal className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 relative flex items-center justify-center">
+              <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain drop-shadow-sm" />
             </div>
             <span className="text-xl font-bold text-foreground">IsyaratHUB</span>
           </div>

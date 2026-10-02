@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, CheckCircle2, Clock, Navigation, User, Phone, Star, MessageSquare } from "lucide-react";
 import Link from "next/link";
@@ -38,8 +38,8 @@ export default function LiveTracker({ jbiName, jbiAvatar, location, onClose }: {
   // Layar Penuh (Sesi / Rating)
   if (currentStep >= 3) {
     return (
-      <div className="fixed inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center p-6">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md flex flex-col items-center">
+      <div className="fixed inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center p-0 sm:p-6">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className={`w-full max-w-md flex flex-col items-center ${step.id === "in_progress" ? 'h-full' : 'p-6'}`}>
           {step.id === "in_progress" ? (
             <InSessionView jbiName={jbiName} jbiAvatar={jbiAvatar} onComplete={() => setCurrentStep(4)} />
           ) : (
@@ -107,11 +107,20 @@ export default function LiveTracker({ jbiName, jbiAvatar, location, onClose }: {
 
 function InSessionView({ jbiName, jbiAvatar, onComplete }: { jbiName: string, jbiAvatar: string, onComplete: () => void }) {
   const [seconds, setSeconds] = useState(0);
+  const [msg, setMsg] = useState("");
+  const [chats, setChats] = useState([
+    { id: 1, text: "Halo, sesi kita sudah dimulai ya.", isMe: false, time: "10:15" }
+  ]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const timer = setInterval(() => setSeconds(s => s + 1), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chats]);
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -119,29 +128,77 @@ function InSessionView({ jbiName, jbiAvatar, onComplete }: { jbiName: string, jb
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  const sendMsg = (e: React.FormEvent) => {
+    e.preventDefault();
+    if(!msg.trim()) return;
+    
+    const now = new Date();
+    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    setChats(prev => [...prev, { id: Date.now(), text: msg, isMe: true, time }]);
+    setMsg("");
+    setTimeout(() => {
+      setChats(prev => [...prev, { id: Date.now(), text: "Baik, saya siap membantu.", isMe: false, time }]);
+    }, 2000);
+  };
+
   return (
-    <div className="w-full text-center">
-      <div className="w-28 h-28 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-5xl font-black border-4 border-white shadow-md mx-auto mb-6">
-        {jbiAvatar}
-      </div>
-      <h2 className="text-3xl font-bold text-slate-800 mb-2">Sesi Berlangsung</h2>
-      <p className="text-slate-500 font-medium mb-10 text-lg">bersama {jbiName}</p>
-      
-      <div className="bg-white border border-slate-200 px-10 py-8 rounded-[2.5rem] shadow-sm mb-12">
-        <p className="text-slate-400 font-bold mb-2 uppercase tracking-wider text-sm">Durasi</p>
-        <div className="text-6xl font-mono font-black text-purple-600 tracking-tight">
-          {formatTime(seconds)}
+    <div className="w-full h-full flex flex-col bg-white rounded-none sm:rounded-3xl overflow-hidden shadow-2xl">
+      {/* HEADER: Timer & Info */}
+      <div className="bg-purple-600 p-6 pb-8 text-white relative shrink-0 rounded-b-3xl sm:rounded-b-none">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-2xl border-2 border-white/30 backdrop-blur-sm shrink-0">
+            {jbiAvatar}
+          </div>
+          <div>
+            <h2 className="text-xl font-bold leading-tight">{jbiName}</h2>
+            <p className="text-purple-200 text-sm font-medium">Sesi Berlangsung</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/20">
+          <div>
+            <p className="text-purple-200 text-xs font-bold uppercase tracking-wider mb-1">Durasi</p>
+            <div className="text-4xl font-mono font-black">{formatTime(seconds)}</div>
+          </div>
+          <div className="flex gap-2">
+            <button className="w-12 h-12 rounded-xl bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center shadow-lg shrink-0">
+              <Phone className="w-5 h-5 text-white" />
+            </button>
+            <button onClick={onComplete} className="h-12 px-5 rounded-xl bg-white text-purple-600 hover:bg-slate-50 transition-colors flex items-center justify-center font-bold shadow-lg">
+              Selesai
+            </button>
+          </div>
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-4 w-full">
-        <button className="py-5 rounded-2xl bg-red-50 text-red-600 font-bold border border-red-100 hover:bg-red-100 transition-colors flex flex-col items-center gap-2 text-lg">
-           <Phone className="w-7 h-7" /> Darurat
-        </button>
-        <button onClick={onComplete} className="py-5 rounded-2xl bg-purple-600 text-white hover:bg-purple-700 font-bold shadow-lg shadow-purple-200 transition-colors flex flex-col items-center gap-2 text-lg">
-           <CheckCircle2 className="w-7 h-7" /> Selesai
-        </button>
+      {/* CHAT AREA */}
+      <div className="flex-1 bg-slate-50 p-4 overflow-y-auto space-y-4 custom-scrollbar">
+        <div className="text-center"><span className="text-xs font-bold text-slate-400 bg-slate-200/50 px-3 py-1 rounded-full">Sesi Dimulai</span></div>
+        {chats.map(c => (
+          <div key={c.id} className={`flex ${c.isMe ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-[15px] ${c.isMe ? 'bg-purple-600 text-white rounded-br-sm' : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm shadow-sm'}`}>
+              {c.text}
+              <div className={`text-[10px] mt-1 text-right ${c.isMe ? 'text-purple-200' : 'text-slate-400'}`}>{c.time}</div>
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
+      
+      {/* CHAT INPUT */}
+      <form onSubmit={sendMsg} className="p-3 bg-white border-t border-slate-200 flex gap-2">
+        <input 
+          type="text" 
+          value={msg}
+          onChange={e => setMsg(e.target.value)}
+          placeholder="Tulis pesan..." 
+          className="flex-1 bg-slate-100 rounded-full px-5 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-purple-500/50 font-medium text-slate-800"
+        />
+        <button type="submit" disabled={!msg.trim()} className="w-12 h-12 bg-purple-600 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-full flex items-center justify-center shrink-0 shadow-md transition-all active:scale-95">
+          <MessageSquare className="w-5 h-5 -ml-0.5" />
+        </button>
+      </form>
     </div>
   );
 }

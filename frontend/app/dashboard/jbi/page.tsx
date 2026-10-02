@@ -59,8 +59,8 @@ export default function JBIDashboard() {
       {/* HEADER DESKTOP (BERSIH) */}
       <header className="hidden sm:flex absolute top-6 left-6 right-6 z-40 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-3xl px-6 py-4 items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center">
-            <HandMetal className="w-6 h-6 text-emerald-600" />
+          <div className="w-10 h-10 relative flex items-center justify-center">
+            <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain drop-shadow-sm" />
           </div>
           <span className="font-bold text-xl text-slate-800">IsyaratHUB <span className="text-emerald-600 text-sm">Mitra</span></span>
         </div>
@@ -98,8 +98,8 @@ export default function JBIDashboard() {
       {/* HEADER MOBILE */}
       <header className="sm:hidden absolute top-0 left-0 w-full z-40 pt-6 pb-12 px-6 flex items-center justify-between pointer-events-none">
         <div className="flex items-center gap-3 pointer-events-auto">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-slate-100">
-            <HandMetal className="w-7 h-7 text-emerald-600" />
+          <div className="w-12 h-12 relative flex items-center justify-center drop-shadow-lg bg-white rounded-2xl p-2 border border-slate-100">
+            <img src="/logo_transparan.webp" alt="IsyaratHUB" className="w-full h-full object-contain" />
           </div>
         </div>
         
